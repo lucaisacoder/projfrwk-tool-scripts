@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 #-*- coding = utf-8 -*-
-import os
+import os, subprocess, shutil, time
 from ClassPrint import *
-import subprocess
-import shutil
 from multiprocessing import cpu_count
 
 PRT = ClassPrint()
@@ -11,6 +9,7 @@ COMPILE_TYPES = ["Unix Makefiles",""]
 
 class ClassCmd:
     def __init__(self, project_path, compile_type, build_path, config_file, verbose):
+        PRT.debug("%s\%s\%s\%s\%s"%(project_path, compile_type, build_path, config_file, verbose))
         if not os.path.exists(project_path):
             PRT.NoPathFound(project_path)
             exit(1)
@@ -31,7 +30,7 @@ class ClassCmd:
             os.mkdir(self.build_path)
         os.chdir(self.build_path)
 
-        if not os.path.exists(self.build_path + os.path.split() + "Makefile"):
+        if not os.path.exists(self.build_path + "/Makefile"):
             if not os.path.isabs(self.config_file):
                 self.config_file = os.path.join(self.project_path, self.config_file)
             config_path = os.path.abspath(self.config_file)

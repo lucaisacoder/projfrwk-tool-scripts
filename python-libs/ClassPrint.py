@@ -1,44 +1,45 @@
 #!/usr/bin/env python
 #-*- coding = utf-8 -*-
+import sys
 
 class ClassPrint:
     def __init__(self):
         pass
 
-    @staticmethod
-    def info(str):
-        print("Info: %s" % str)
+    def debug(self, str):
+        print("=== debug: %s" % str)
 
-    @staticmethod
-    def error(str):
-        print("Error: %s" % str)
+    def info(self, title, str):
+        print(">>> %s: %s" % (title, str))
 
-    @staticmethod
-    def Complete(str):
-        print("Complete: %s" % str)
+    def error(self, str):
+        print("[Error]: %s" % (str))
+        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
-    @staticmethod
-    def Success(str):
-        print("Success: %s" % str)
+    def Complete(self, str):
+        print(">>> Complete: %s" % str)
 
-    @staticmethod
-    def Start(str):
-        print("Start: %s" % str)
+    def Success(self, str):
+        print(">>> Success: %s" % str)
 
-    @staticmethod
-    def Process(str):
-        print("Process: %s" % str)
+    def Start(self, str):
+        print(">>> Start: %s" % str)
 
-    @staticmethod
-    def NoPathFound(path):
-        print("Error: no path found, %s" % path)
+    def Process(self, str):
+        print("= Process: %s" % str)
 
-    @staticmethod
-    def NoSuchFile(file):
-        print("Error: no such a file, %s" % file)
+    def NoPathFound(self, path):
+        print("[Error]: no path found, %s" % (path))
+        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
-    @staticmethod
-    def TimeLast(time_start, time_end):
+    def NoSuchFile(self, file):
+        print("[Error]: no such a file, %s" % (file))
+        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
+
+    def Result(self, title, str):
         print("==================================")
-        print("  time last:%.2fs" %(time_end - time_start))
+        print("  %s: %s" %(title, str))
         print("==================================")
+
+    def TimeLast(self, time_start, time_end):
+        self.Result("time last", "%.2fs" %(time_end - time_start))
