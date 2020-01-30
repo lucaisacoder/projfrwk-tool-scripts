@@ -14,7 +14,7 @@ class ClassPrint:
 
     def error(self, str):
         print("[Error]: %s" % (str))
-        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
+        print("%s:%s:%s" %(sys._getframe().f_back.f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
     def Complete(self, str):
         print(">>> Complete: %s" % str)
@@ -30,11 +30,11 @@ class ClassPrint:
 
     def NoPathFound(self, path):
         print("[Error]: no path found, %s" % (path))
-        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
+        print("%s:%s:%s" %(sys._getframe().f_back.f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
     def NoSuchFile(self, file):
         print("[Error]: no such a file, %s" % (file))
-        print("%s:%s:%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
+        print("%s:%s:%s" %(sys._getframe().f_back.f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
     def Result(self, title, str):
         print("==================================")
