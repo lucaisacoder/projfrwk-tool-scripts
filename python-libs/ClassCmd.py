@@ -8,11 +8,12 @@ PRT = ClassPrint()
 COMPILE_TYPES = ["Unix Makefiles",""]
 
 class ClassCmd:
-    def __init__(self, project_path, compile_type, build_path, config_file, verbose):
-        PRT.debug("%s\%s\%s\%s\%s"%(project_path, compile_type, build_path, config_file, verbose))
+    def __init__(self, sdk_path, project_path, compile_type, build_path, config_file, verbose):
+        PRT.debug("%s\%s\%s\%s\%s\%s"%(sdk_path, project_path, compile_type, build_path, config_file, verbose))
         if not os.path.exists(project_path):
             PRT.NoPathFound(project_path)
             exit(1)
+        self.sdk_path = sdk_path
         self.project_path = project_path
         if compile_type not in COMPILE_TYPES:
             PRT.error("no compile type found - %s. set default type." % (compile_type))
@@ -153,6 +154,25 @@ class ClassCmd:
         time_end = time.time()
         PRT.TimeLast(time_start, time_end)
         PRT.Complete("install!")
+
+    def uninstall(self):
+        PRT.Start("uninstall!")
+        install_include_path = self.sdk_path + "/public/include"
+        install_lib_path = self.sdk_path + "/public/lib"
+        install_bin_path = self.sdk_path + "/public/bin"
+        PRT.Process("remove %s ... " % install_include_path)
+        if os.path.exists(install_include_path):
+            shutil.rmtree(install_include_path)
+            PRT.Process("ok")
+        PRT.Process("remove %s ... " % install_lib_path)
+        if os.path.exists(install_lib_path):
+            shutil.rmtree(install_lib_path)
+            PRT.Process("ok")
+        PRT.Process("remove %s ... " % install_bin_path)
+        if os.path.exists(install_bin_path):
+            shutil.rmtree(install_bin_path)
+            PRT.Process("ok")
+        PRT.Complete("uninstall!")
 
     def unknown(self):
         PRT.error("unknown cmd.")

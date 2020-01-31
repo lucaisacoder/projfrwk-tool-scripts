@@ -38,7 +38,7 @@ if __name__ == "__main__":
     project_parser.add_argument('--toolchain-prefix', help='toolchain prefix', metavar='PREFIX', default="")
     project_parser.add_argument('--config', help='config file path', metavar='PATH', default="{}/config.mk".format(project_path))
     project_parser.add_argument('--verbose', help='debug build command, `make VERBOSE=1`', action="store_true", default=False)
-    project_parser.add_argument("cmd", help='command list', choices=["config", "build", "rebuild", "menuconfig", "clean", "distclean", "clean_conf", "unit_test", "install"])
+    project_parser.add_argument("cmd", help='command list', choices=["config", "build", "rebuild", "menuconfig", "clean", "distclean", "clean_conf", "unit_test", "install", "uninstall"])
     project_args = project_parser.parse_args()
 
     config_filename = ".config.mk"
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     config = ClassConfig(project_path, config_filename, project_args.toolchain, project_args.toolchain_prefix)
     config.write()
 
-    cmd = ClassCmd(project_path, project_type, build_path, config_filename, project_args.verbose)
+    cmd = ClassCmd(sdk_path, project_path, project_type, build_path, config_filename, project_args.verbose)
     # config
     if project_args.cmd == "config":
         cmd.config()
@@ -78,6 +78,9 @@ if __name__ == "__main__":
     # install
     elif project_args.cmd == "install":
         cmd.install()
+    # uninstall
+    elif project_args.cmd == "uninstall":
+        cmd.uninstall()
     else:
         cmd.unknown()
         exit(1)
