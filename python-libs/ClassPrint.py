@@ -26,7 +26,7 @@ class ClassPrint:
         print(">>> Start: %s" % str)
 
     def Process(self, str):
-        print("= Process: %s" % str)
+        print("-- Process: %s" % str)
 
     def NoPathFound(self, path):
         print("[Error]: no path found, %s" % (path))

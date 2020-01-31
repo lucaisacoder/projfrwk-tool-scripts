@@ -29,15 +29,17 @@ class ClassCmd:
         if not os.path.exists(self.build_path):
             os.mkdir(self.build_path)
         os.chdir(self.build_path)
+        PRT.Process("Enter into: %s" % self.build_path)
 
         if not os.path.exists(self.build_path + "/Makefile"):
             if not os.path.isabs(self.config_file):
                 self.config_file = os.path.join(self.project_path, self.config_file)
             config_path = os.path.abspath(self.config_file)
+            PRT.Process("Config filename: %s" % config_path)
             if not os.path.exists(config_path):
                 PRT.NoPathFound(config_path)
                 exit(1)
-            res = subprocess.call(["cmake", "-G", self.compile_type, "-DDEFAULT_CONFIG_FILE={}".format(config_path),  ".."])
+            res = subprocess.call(["cmake", "-G", self.compile_type, "-DDEFAULT_CONFIG_FILE={}".format(config_path), "-DCOMPILE_UNIT_TEST={}".format(""), ".."])
             if res != 0:
                 exit(1)
         res = subprocess.call(["make", "menuconfig"])
@@ -62,6 +64,7 @@ class ClassCmd:
         if not os.path.exists(self.build_path):
             os.mkdir(self.build_path)
         os.chdir(self.build_path)
+        PRT.Process("Enter into: %s" % self.build_path)
 
         if not os.path.exists("Makefile"):
             if not os.path.isabs(self.config_file):
@@ -70,7 +73,7 @@ class ClassCmd:
             if not os.path.exists(config_path):
                 PRT.NoPathFound(config_path)
                 exit(1)
-            res = subprocess.call(["cmake", "-G", self.compile_type, "-DDEFAULT_CONFIG_FILE={}".format(config_path),  ".."])
+            res = subprocess.call(["cmake", "-G", self.compile_type, "-DDEFAULT_CONFIG_FILE={}".format(config_path), "-DCOMPILE_UNIT_TEST={}".format("BUILD"), ".."])
             if res != 0:
                 exit(1)
         if self.verbose:
@@ -104,6 +107,36 @@ class ClassCmd:
         os.chdir(self.build_path + os.path.split() + "..")
         shutil.rmtree(self.build_path)
         PRT.Complete("disclean!")
+
+    def unit_test(self):
+        PRT.Start("unit_test!")
+        time_start = time.time()
+
+        if not os.path.exists(self.build_path):
+            os.mkdir(self.build_path)
+        os.chdir(self.build_path)
+        PRT.Process("Enter into: %s" % self.build_path)
+
+        if not os.path.exists("Makefile"):
+            if not os.path.isabs(self.config_file):
+                self.config_file = os.path.join(self.project_path, self.config_file)
+            config_path = os.path.abspath(self.config_file)
+            if not os.path.exists(config_path):
+                PRT.NoPathFound(config_path)
+                exit(1)
+            res = subprocess.call(["cmake", "-G", self.compile_type, "-DDEFAULT_CONFIG_FILE={}".format(config_path), "-DCOMPILE_UNIT_TEST={}".format("UNIT_TEST"), ".."])
+            if res != 0:
+                exit(1)
+        if self.verbose:
+                res = subprocess.call(["make", "VERBOSE=1"])
+        else:
+            res = subprocess.call(["make", "-j{}".format(cpu_count())])
+        if res != 0:
+            exit(1)
+
+        time_end = time.time()
+        PRT.TimeLast(time_start, time_end)
+        PRT.Complete("unit_test!")
 
     def unknown(self):
         PRT.error("unknown cmd.")

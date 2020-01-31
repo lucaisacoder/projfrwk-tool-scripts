@@ -11,13 +11,14 @@ from ClassCmd import *
 if __name__ == "__main__":
 
     PRT = ClassPrint()
-    PRT.debug("sdk_path = %s " % sdk_path)
+    #PRT.debug("sdk_path = %s " % sdk_path)
     
     if not os.path.exists("CMakeLists.txt") or not os.path.exists("code"):
         PRT.error("Run at project folder!")
         exit(1)
     
     project_path = sys.path[0]
+    PRT.info("PROJECT_PATH", project_path)
     project_name = ""
     project_cmake_path = project_path + "/CMakeLists.txt"
     project_cmake_content = ""
@@ -37,13 +38,15 @@ if __name__ == "__main__":
     project_parser.add_argument('--toolchain-prefix', help='toolchain prefix', metavar='PREFIX', default="")
     project_parser.add_argument('--config', help='config file path', metavar='PATH', default="{}/config.mk".format(project_path))
     project_parser.add_argument('--verbose', help='debug build command, `make VERBOSE=1`', action="store_true", default=False)
-    project_parser.add_argument("cmd", help='command list', choices=["config", "build", "rebuild", "menuconfig", "clean", "distclean", "clean_conf"])
+    project_parser.add_argument("cmd", help='command list', choices=["config", "build", "rebuild", "menuconfig", "clean", "distclean", "clean_conf", "unit_test"])
     project_args = project_parser.parse_args()
 
     config_filename = ".config.mk"
     build_path = project_path + "/build"
-    print("0000000 %s"%build_path)
+    PRT.info("PROJECT_BUILD_PATH", build_path)
     project_type = "Unix Makefiles"
+    PRT.info("PROJECT_TYPE", project_type)
+    
     config = ClassConfig(project_path, config_filename, project_args.toolchain, project_args.toolchain_prefix)
     config.write()
 
@@ -68,7 +71,10 @@ if __name__ == "__main__":
         cmd.menuconfig()
     # clean_conf
     elif project_args.cmd == "clean_conf":
-        cmd.clean_conf()
+        cmd.clean_conf()    
+    # unit_test
+    elif project_args.cmd == "unit_test":
+        cmd.unit_test()
     else:
         cmd.unknown()
         exit(1)
