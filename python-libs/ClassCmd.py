@@ -138,5 +138,21 @@ class ClassCmd:
         PRT.TimeLast(time_start, time_end)
         PRT.Complete("unit_test!")
 
+    def install(self):
+        PRT.Start("install!")
+        time_start = time.time()
+
+        if not os.path.exists(self.build_path):
+            os.mkdir(self.build_path)
+        os.chdir(self.build_path)
+        PRT.Process("Enter into: %s" % self.build_path)
+
+        res = subprocess.call(["make", "install"])
+        if res != 0:
+            exit(1)
+        time_end = time.time()
+        PRT.TimeLast(time_start, time_end)
+        PRT.Complete("install!")
+
     def unknown(self):
         PRT.error("unknown cmd.")
