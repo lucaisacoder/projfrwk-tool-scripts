@@ -32,7 +32,7 @@ class ClassCmd:
             exit(1)
 
 
-    def build(self):
+    def build(self, install_path):
         PRT.Start("build!")
         time_start = time.time()
 
@@ -45,7 +45,7 @@ class ClassCmd:
         PRT.Process("Enter into: %s" % self.cmd_build_path)
 
         if not os.path.exists("Makefile"):
-            res = subprocess.call(["cmake", "-G", self.cmd_compile_type, ".."])
+            res = subprocess.call(["cmake", "-G", self.cmd_compile_type, "-DCMAKE_INSTALL_PREFIX={}".format(install_path), ".."])
             if res != 0:
                 exit(1)
         if self.cmd_verbose:
@@ -58,6 +58,40 @@ class ClassCmd:
         time_end = time.time()
         PRT.TimeLast(time_start, time_end)
         PRT.Complete("build!")
+
+
+    def install(self):
+        PRT.Start("install!")
+        if not os.path.exists(self.cmd_build_path):
+            PRT.NoPathFound(self.cmd_build_path)
+            PRT.info("TIPS", "Run 'project.py build' first!")
+            exit(1)
+        if not  os.path.exists(self.cmd_build_path + "/Makefile"):
+            PRT.NoSuchFile(self.cmd_build_path + "/Makefile")
+            exit(1)
+        os.chdir(self.cmd_build_path)
+        PRT.Process("Enter into: %s" % self.cmd_build_path)
+        res = subprocess.call(["make", "install"])
+        if res != 0:
+            exit(1)
+        PRT.Complete("install!")
+
+
+    def uninstall(self):
+        PRT.Start("uninstall!")
+        if not os.path.exists(self.cmd_build_path):
+            PRT.NoPathFound(self.cmd_build_path)
+            exit(1)
+        if not  os.path.exists(self.cmd_build_path + "/Makefile"):
+            PRT.NoSuchFile(self.cmd_build_path + "/Makefile")
+            exit(1)
+        os.chdir(self.cmd_build_path)
+        PRT.Process("Enter into: %s" % self.cmd_build_path)
+        res = subprocess.call(["make", "uninstall"])
+        if res != 0:
+            exit(1)
+        PRT.Complete("uninstall!")
+
 
     def unknown(self):
         PRT.error("unknown cmd.")

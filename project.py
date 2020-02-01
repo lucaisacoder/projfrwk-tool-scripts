@@ -28,14 +28,19 @@ if __name__ == '__main__':
     #project_parser.add_argument('--toolchain', help='toolchain absolute path', metavar='PATH', default="")
     #project_parser.add_argument('--toolchain-prefix', help='toolchain prefix', metavar='PREFIX', default="")
     #project_parser.add_argument('--config', help='config file path', metavar='PATH', default="{}/config.mk".format(project_path))
+    project_parser.add_argument('--install', help='config install path', metavar='PATH', default="../installed")
     project_parser.add_argument('--verbose', help='debug build command, `make VERBOSE=1`', action="store_true", default=False)
-    project_parser.add_argument("cmd", help='command list', choices=["config", "build", "rebuild", "menuconfig", "clean", "distclean", "clean_conf", "unit_test", "install", "uninstall"])
+    project_parser.add_argument("cmd", help='command list', choices=["build", "install", "uninstall", "config", "rebuild", "menuconfig", "clean", "distclean", "clean_conf"])
     project_args = project_parser.parse_args()
 
     cmder = ClassCmd(sdk_path, project_path, "Unix Makefiles", project_args.verbose)
     # build
     if project_args.cmd == "build":
-        cmder.build()
+        cmder.build(project_args.install)
+    elif project_args.cmd == "install":
+        cmder.install()
+    elif project_args.cmd == "uninstall":
+        cmder.uninstall()
     else:
         cmder.unknown()
         exit(1)
