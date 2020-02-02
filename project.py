@@ -3,8 +3,8 @@
 
 import argparse
 import os, sys, re
-from pythonlib.ClassPrint import *
-from pythonlib.ClassCmd import *
+from pyscripts.ClassPrint import *
+from pyscripts.ClassCmd import *
 
 if __name__ == '__main__':
     PRT = ClassPrint()

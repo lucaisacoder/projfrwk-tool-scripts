@@ -4,8 +4,8 @@
 from pathlib import * # only Python3 supports
 import os, subprocess, shutil, time
 from multiprocessing import cpu_count
-from pythonlib.ClassPrint import *
-from pythonlib.ClassCompile import *
+from pyscripts.ClassPrint import *
+from pyscripts.ClassCompile import *
 
 PRT = ClassPrint()
 COMPILE_TYPES = ["Unix Makefiles",""]
