@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 #-*- coding = utf-8 -*-
+
 from pathlib import * # only Python3 supports
 import os, subprocess, shutil, time
 from multiprocessing import cpu_count
 from pythonlib.ClassPrint import *
+from pythonlib.ClassCompile import *
 
 PRT = ClassPrint()
 COMPILE_TYPES = ["Unix Makefiles",""]
