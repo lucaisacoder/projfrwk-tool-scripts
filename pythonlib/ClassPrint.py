@@ -12,9 +12,9 @@ class ClassPrint:
     def info(self, title, str):
         print(">>> %s: %s" % (title, str))
 
-    def error(self, str):
-        print("[Error]: %s" % (str))
-        print("[Error]: %s:%s:%s" %(sys._getframe().f_back.f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
+    def error(self, title, str):
+        print("[Error]: %s: %s" % (title, str))
+        print("[Error]: %s: %s:%s" %(sys._getframe().f_back.f_code.co_filename, sys._getframe().f_back.f_code.co_name, sys._getframe().f_back.f_lineno))
 
     def Complete(self, str):
         print(">>> Complete: %s" % str)
