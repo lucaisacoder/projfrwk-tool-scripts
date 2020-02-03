@@ -8,6 +8,7 @@ from pyscripts.ClassCmd import *
 from pathlib import * # only Python3 supports
 
 PRT = ClassPrint()
+SDK_SCRIPTS_NAME = "scripts"
 
 def project_process(project_sdk_path, project_name, project_path, project_cmake_file):
     # project info
@@ -23,14 +24,18 @@ def project_process(project_sdk_path, project_name, project_path, project_cmake_
     #project_parser.add_argument('--config', help='config file path', metavar='PATH', default="{}/config.mk".format(project_path))
     project_parser.add_argument('--install', help='config install path', metavar='PATH', default="installed")
     project_parser.add_argument('--verbose', help='debug build command, `make VERBOSE=1`', action="store_true", default=False)
-    project_parser.add_argument("cmd", help='command list', choices=[   "build", "install", "uninstall", "clean", "distclean", "build_all", "menuconfig",
+    project_parser.add_argument("cmd", help='command list', choices=[   "build", "install", "uninstall", "clean", "distclean", "menuconfig",
                                                                         "config", "rebuild", "clean_conf"])
     project_args = project_parser.parse_args()
 
     cmder = ClassCmd(project_sdk_path, project_path, project_args.install, "Unix Makefiles", project_args.verbose)
     # build
     if project_args.cmd == "build":
-        cmder.build()
+        if _all_project_ is True:
+            cmder.build()
+            cmder.install()
+        else:
+            cmder.build()
     elif project_args.cmd == "install":
         cmder.install()
     elif project_args.cmd == "uninstall":
@@ -39,28 +44,26 @@ def project_process(project_sdk_path, project_name, project_path, project_cmake_
         cmder.clean()
     elif project_args.cmd == "distclean":
         cmder.distclean()    
-    elif project_args.cmd == "build_all":
-        cmder.build()
-        cmder.install()
     elif project_args.cmd == "menuconfig":
-        cmder.menuconfig()
-    elif project_args.cmd == "menuconfig_all":
         cmder.menuconfig()
     else:
         cmder.unknown(project_args.cmd)
         exit(1)
 
-def check_scripts_path():
-    _cur_path = Path(".").resolve()
-    return _cur_path.match("scripts")
+def check_path(path_name):
+    _cur_path = Path(__file__).parent
+    _parent_path = _cur_path.resolve()
+    return _parent_path.match(path_name)
 
 def get_sdk_path():
     return Path.cwd().parent.parent
 
 ALL_PROJECT_PATH = ["components", "core"]
+_all_project_ = False
 
 if __name__ == '__main__':
-    if check_scripts_path() is True:
+    if check_path(SDK_SCRIPTS_NAME) is True:
+        _all_project_ = True
         _project_sdk_path = get_sdk_path()
         for dir in ALL_PROJECT_PATH:
             _path = _project_sdk_path / dir
@@ -71,10 +74,11 @@ if __name__ == '__main__':
                     _project_cmake_file = item / "CMakeLists.txt"
                     project_process(_project_sdk_path, _project_name, _project_path, _project_cmake_file)
     else:
+        _all_project_ = False
         # check files
         files = ["CMakeLists.txt", "Kconfig"]
         for item in files:
-            if not os.path.exists(item): 
+            if not os.path.exists(project.path() / item): 
                 PRT.NoSuchFile(item)
                 exit(1)
         project_process(project.sdk_path(), project.name(), project.path(), project.cmake_file())
