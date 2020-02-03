@@ -126,6 +126,21 @@ class ClassCmd:
         if self._cmd_install_path.exists():
             shutil.rmtree(self._cmd_install_path)
         PRT.Complete("disclean!")
+  
+
+    def menuconfig(self):
+        PRT.Start("menuconfig!")
+        if not self._cmd_build_path.exists():
+            self._cmd_build_path.mkdir(parents=True, exist_ok=True)
+            PRT.info("create", "dir %s!" % self._cmd_build_path)
+        os.chdir(self._cmd_build_path)
+        _makefile_path = self._cmd_build_path / "Makefile"
+        if not _makefile_path.exists():
+            self.build()
+        _res = subprocess.call(["make", "menuconfig"])
+        if _res != 0:
+            exit(1)
+        PRT.Complete("menuconfig!")
 
 
     def unknown(self, cmd):

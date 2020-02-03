@@ -9,8 +9,6 @@ from pathlib import * # only Python3 supports
 
 PRT = ClassPrint()
 
-SDK_SCRIPTS_DIR_BASENAME = "scripts"
-
 def project_process(project_sdk_path, project_name, project_path, project_cmake_file):
     # project info
     PRT.info("SDK_PATH", project_sdk_path)
@@ -25,8 +23,8 @@ def project_process(project_sdk_path, project_name, project_path, project_cmake_
     #project_parser.add_argument('--config', help='config file path', metavar='PATH', default="{}/config.mk".format(project_path))
     project_parser.add_argument('--install', help='config install path', metavar='PATH', default="installed")
     project_parser.add_argument('--verbose', help='debug build command, `make VERBOSE=1`', action="store_true", default=False)
-    project_parser.add_argument("cmd", help='command list', choices=[   "build", "install", "uninstall", "clean", "distclean", "build_all",
-                                                                        "config", "rebuild", "menuconfig", "clean_conf"])
+    project_parser.add_argument("cmd", help='command list', choices=[   "build", "install", "uninstall", "clean", "distclean", "build_all", "menuconfig",
+                                                                        "config", "rebuild", "clean_conf"])
     project_args = project_parser.parse_args()
 
     cmder = ClassCmd(project_sdk_path, project_path, project_args.install, "Unix Makefiles", project_args.verbose)
@@ -44,6 +42,10 @@ def project_process(project_sdk_path, project_name, project_path, project_cmake_
     elif project_args.cmd == "build_all":
         cmder.build()
         cmder.install()
+    elif project_args.cmd == "menuconfig":
+        cmder.menuconfig()
+    elif project_args.cmd == "menuconfig_all":
+        cmder.menuconfig()
     else:
         cmder.unknown(project_args.cmd)
         exit(1)
