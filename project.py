@@ -50,19 +50,34 @@ def project_process(project_sdk_path, project_name, project_path, project_cmake_
         cmder.unknown(project_args.cmd)
         exit(1)
 
-def check_path(path_name):
+def check_exist_path(path_name):
     _cur_path = Path(__file__).parent
     _parent_path = _cur_path.resolve()
     return _parent_path.match(path_name)
 
+def check_exist_file(file_name):
+    _file_name = Path(file_name)
+    return _file_name.is_file()
+
 def get_sdk_path():
     return Path.cwd().parent.parent
 
-ALL_PROJECT_PATH = ["components", "core", "tools/main"]
+def find_project_path(path):
+    _project_py_file = path / "project.py"
+    print("%s;%s" % (_project_py_file ,check_exist_file(_project_py_file)))
+    if check_exist_file(_project_py_file.resolve()) is True:
+        return path
+    else:
+        _path = path.parent
+        print(_path.resolve())
+        return _path.resolve()
+        
+
+ALL_PROJECT_PATH = ["components", "core"]
 _all_project_ = False
 
 if __name__ == '__main__':
-    if check_path(SDK_SCRIPTS_NAME) is True:
+    if check_exist_path(SDK_SCRIPTS_NAME) is True:
         _all_project_ = True
         _project_sdk_path = get_sdk_path()
         for dir in ALL_PROJECT_PATH:
@@ -73,6 +88,12 @@ if __name__ == '__main__':
                     _project_path = item
                     _project_cmake_file = item / "CMakeLists.txt"
                     project_process(_project_sdk_path, _project_name, _project_path, _project_cmake_file)
+        # main project
+        _project_name = "main"
+        _project_path = _project_sdk_path / "tools" / _project_name
+        _project_cmake_file = _project_path / "CMakeLists.txt"
+        project_process(_project_sdk_path, _project_name, _project_path, _project_cmake_file)
+
     else:
         _all_project_ = False
         # check files
