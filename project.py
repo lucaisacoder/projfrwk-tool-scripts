@@ -58,7 +58,7 @@ def check_path(path_name):
 def get_sdk_path():
     return Path.cwd().parent.parent
 
-ALL_PROJECT_PATH = ["components", "core"]
+ALL_PROJECT_PATH = ["components", "core", "tools/main"]
 _all_project_ = False
 
 if __name__ == '__main__':
